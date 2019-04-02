@@ -12,7 +12,7 @@ log4js.configure({
         response: {
             type: 'dateFile',
             category: 'resLogger',
-            filename: __dirname + '/../logs/res/',
+            filename: __dirname + '/../logs/log.log',
             pattern: 'yyyy-MM-dd.log', //日志输出模式
             alwaysIncludePattern: true,
             //maxLogSize: 104800,
@@ -27,24 +27,31 @@ log4js.configure({
     replaceConsole: true
 });
 
-const {formatError, formatRes} = require('./formatLog.js');
 let logger = {};
 let errorLogger = log4js.getLogger('error');
 let resLogger = log4js.getLogger('response');
+let formatError = (ctx, err,costTime) => {
+    let method = ctx.method;
+    let url = ctx.url;
+    let body = ctx.request.body;
+    let userAgent = ctx.header.userAgent;
+    return {method, url, body, costTime, err, userAgent};
+};
 
 // 封装错误日志
 logger.errLogger = (ctx, error, resTime) => {
-    if(ctx && error) {
+    if (ctx && error) {
         errorLogger.error(formatError(ctx, error, resTime));
     }
 };
 
 // 封装响应日志
 logger.resLogger = (ctx, resTime) => {
-    if(ctx) {
-        //resLogger.info(formatRes(ctx, resTime));
-        log4js.connectLogger(resLogger, {format:':method :url :status :res[content-length] - :response-time ms :remote-addr'});
-    }
+    if (ctx) resLogger.info(`${ctx.method} ${ctx.url} ${ctx.status} ${ctx.length} - ${resTime} ms ${ctx.ip}`);
 };
+
+let logUtil = log4js.getLogger();
+logUtil.level = "debug";
+logger.log = logUtil;
 
 module.exports = logger;
