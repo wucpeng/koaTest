@@ -1,0 +1,12 @@
+{
+  "name": "koaTest",
+  "version": "1.0.0",
+  "dependencies": {
+    "koa": "^2.7.0",
+    "koa-body": "^4.1.0",
+    "koa-router": "^7.4.0",
+    "koa-session": "^5.10.1",
+    "log4js": "^4.1.0",
+    "underscore": "^1.9.1"
+  }
+}
