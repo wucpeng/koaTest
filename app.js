@@ -1,14 +1,15 @@
 'use strict';
-
 const Router = require('koa-router');
 const Koa = require('koa');
 const koaBody = require('koa-body');
 const app = new Koa();
 const {log, errLogger} = require('./utils/log4js.js');
 const midWare = require('./routes/midWare.js');
+const {baseRouter} = require('./routes/api.js');
 
 app.use(midWare.midLog4jsRes);
 app.use(koaBody());
+app.use(midWare.midParamsBody);
 
 const router = new Router();
 router.get('/', (ctx) => {
@@ -16,13 +17,7 @@ router.get('/', (ctx) => {
     ctx.status = 301;
 });
 app.use(router.routes());
-const baseRouter = new Router({prefix: '/2'});
-app.use(baseRouter.routes());
-baseRouter.get('/', ctx => {
-    //throw "error test";
-    log.debug('test body', process.pid);
-    ctx.body = `Request Body: ${JSON.stringify(ctx.request.body)}`;
-});
+app.use(baseRouter.routes(), baseRouter.allowedMethods());
 
 app.on('error', (err, ctx) => {
     errLogger(ctx, err);
