@@ -1,11 +1,10 @@
 'use strict';
 const app = require('./app.js');
 const {log} = require('./utils/log4js.js');
+const {title, port} = require('./config/config.js');
 const cluster = require('cluster');
 const server = require('http').createServer(app.callback());
 const schedule = require("./utils/schedule.js");
-const port = 4000;
-const title = "koaTest";  // config definitions
 const workers = {};
 let stopping = false;
 

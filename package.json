@@ -2,6 +2,7 @@
   "name": "koaTest",
   "version": "1.0.0",
   "dependencies": {
+    "bluebird": "^3.5.3",
     "koa": "^2.7.0",
     "koa-body": "^4.1.0",
     "koa-router": "^7.4.0",
