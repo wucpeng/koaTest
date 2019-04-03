@@ -13,7 +13,7 @@ log4js.configure({
             type: 'dateFile',
             category: 'resLogger',
             filename: __dirname + '/../logs/log.log',
-            pattern: 'yyyy-MM-dd.log', //日志输出模式
+            pattern: 'yyyy-MM-dd', //日志输出模式
             alwaysIncludePattern: true,
             //maxLogSize: 104800,
             //backups: 100

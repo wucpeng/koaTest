@@ -1,9 +1,9 @@
 'use strict';
 const app = require('./app.js');
-const util = require('util');
+const {log} = require('./utils/log4js.js');
 const cluster = require('cluster');
 const server = require('http').createServer(app.callback());
-//const scheduleUtil = require("./routes/hztTool/scheduleUtil.js");
+const schedule = require("./utils/schedule.js");
 const port = 4000;
 const title = "koaTest";  // config definitions
 const workers = {};
@@ -16,17 +16,19 @@ let addWorker = ()=> {
     let w = cluster.fork();
     workers[w.process.pid] = w;
     console.log('addWorker pid', w.process.pid);
+    log.info('addWorker pid', w.process.pid);
 };
 
 let killChildren = (ws)=> {
     for(let w of ws) {
         console.log('try to kill', w.process.pid);
+        log.info('try to kill', w.process.pid);
         w.process.kill('SIGTERM');
     }
 };
 
 let reload = ()=> {
-    console.log('reload');
+    log.info('reload');
     let cpyWorkers = [];
     for (let pid in workers) {
         let w = workers[pid];
@@ -38,7 +40,8 @@ let reload = ()=> {
 if (cluster.isMaster) {
     process.title = title + ' master';
     console.log('server ', process.pid, ' start on ', port, ' work process count ', WORKER_COUNT);
-    //scheduleUtil.doSomethingInMasterProcess();
+    log.info('server ', process.pid, ' start on ', port, ' work process count ', WORKER_COUNT);
+    schedule.doSomethingInMasterProcess();
     for(let i = 0; i < WORKER_COUNT; ++i) {
         addWorker();
     }
@@ -65,7 +68,7 @@ if (cluster.isMaster) {
     });
 } else {
     process.title = title + ' worker';
-    //scheduleUtil.doSomethingInWorkerProcess();
+    schedule.doSomethingInWorkerProcess();
     process.on('SIGTERM', ()=> {
         console.log('worker receive signal SIGTERM');
         try {
@@ -83,4 +86,6 @@ if (cluster.isMaster) {
     server.listen(4000);
     console.log(`listen port : ${port} ...................`);
     console.log(`isProduction = ${isProduction}    env = ${process.env.NODE_ENV}`);
+    log.info(`listen port : ${port} ...................`);
+    log.info(`isProduction = ${isProduction}    env = ${process.env.NODE_ENV}`);
 }

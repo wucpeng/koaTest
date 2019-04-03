@@ -6,7 +6,6 @@ kill -9 `pgrep koaTest` > /dev/null 2>&1
 > console.log
 sleep 1
 NODE_ENV=production nohup node server.js > console.log 2>&1 &
-
 while true;
 do
         ps -ax 2> /dev/null | grep koaTest | grep worker 1> ps.log
