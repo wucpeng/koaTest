@@ -2,6 +2,7 @@
 const Router = require('koa-router');
 const {log} = require('../utils/log4js.js');
 const CONFIG = require('../config/config.js');
+const login = require('../app/controller/login');
 
 const baseRouter = new Router({prefix: '/2'});
 baseRouter.get('/', ctx => {
@@ -21,6 +22,8 @@ baseRouter.post('/signin', ctx => {
     ctx.body = "I am okay post\n";
 });
 
+baseRouter.post('/login', login.login);
+
 const clientApp = new Router({prefix: '/app'});
 
 clientApp.get('/data', ctx=> {
@@ -28,6 +31,8 @@ clientApp.get('/data', ctx=> {
     //throw 'test mid err';
     ctx.body = "test step router\n";
 });
+
+
 
 baseRouter.use(clientApp.routes(), clientApp.allowedMethods());
 exports.baseRouter = baseRouter;
