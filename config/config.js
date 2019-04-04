@@ -2,7 +2,7 @@
 const fs = require('fs');
 const _ = require('underscore');
 const CONFIG = {
-    count: 0
+    testDbLink: "mongodb://wucpeng:123456@192.168.0.2:27017/testdb"
 };
 (()=> {
     try {

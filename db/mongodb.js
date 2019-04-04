@@ -2,8 +2,7 @@
 const mongoose = require('mongoose');
 const Promise = require('bluebird');
 mongoose.Promise = Promise; //global.Promise;
-const testDbLink = "mongodb://wucpeng:123456@127.0.0.1:27017/testDb";
-//exports.testDb = null;
+const testDbLink = require('../config/config.js').testDbLink; //"mongodb://wucpeng:123456@192.168.0.2:27017/testdb";
 const dbOptions = {
     useNewUrlParser: true,
     socketTimeoutMS: 0,
@@ -14,11 +13,22 @@ const dbOptions = {
     connectTimeoutMS: 1000,
     autoReconnect: true
 };
+exports.testDb = mongoose.createConnection(testDbLink, dbOptions);
+//module.exports = testDb;
 
-exports.getTestDb = async ()=> {
-    let testDb = await mongoose.connect(testDbLink, dbOptions);
-    return testDb;
-};
+
+// mongoose.connect(testDbLink, dbOptions);
+// const con = mongoose.connection;
+// con.on('error', err=> console.error('连接数据库失败', err));
+// con.once('open',()=>{
+//     //成功连接
+//     console.log('connect success');
+// });
+//
+// exports.getTestDb = async ()=> {
+//     let testDb = await mongoose.connect(testDbLink, dbOptions);
+//     return testDb;
+// };
 
 //(async ()=> {
 //    exports.testDb = await mongoose.connect(testDbLink, dbOptions);
